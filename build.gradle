@@ -1,0 +1,19 @@
+plugins {
+  id "org.springframework.boot" version "1.5.10.RELEASE"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+project.version = '0.2.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+}
