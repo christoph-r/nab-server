@@ -8,11 +8,10 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,36 +25,11 @@ import fi.uta.cs.nabaztag.Packet;
 public class BunnyService {
 	private static final Logger logger = LoggerFactory.getLogger(BunnyService.class);
 
-	private final Queue<Packet> messages = new ConcurrentLinkedQueue<>();
-
 	@Value("${nab.records.path}")
 	private String rootPath;
 
-	public BunnyService() {
-		Packet p = new Packet();
-		p.addBlock(new Ping(10));
-		this.addCommand(p);
-
-		p = new Packet();
-		p.addBlock(new Record("record.wav", true));
-		this.addCommand(p);
-
-		p = new Packet();
-		p.addBlock(new Ping(10));
-		this.addCommand(p);
-
-		p = new Packet();
-		p.addBlock(new Choreo("demo"));
-		this.addCommand(p);
-
-		p = new Packet();
-		p.addBlock(new Ping(10));
-		this.addCommand(p);
-
-		p = new Packet();
-		p.addBlock(new Record("test.mp3", true));
-		this.addCommand(p);
-	}
+	@Autowired
+	private MessageQueue queue;
 
 	public InputStream getBootImage() {
 		return this.getClass().getResourceAsStream("/boot.bin");
@@ -76,8 +50,34 @@ public class BunnyService {
 		return null;
 	}
 
+	public void initTestData() {
+		Packet p = new Packet();
+		p.addBlock(new Ping(10));
+		queue.push(p);
+
+		p = new Packet();
+		p.addBlock(new Record("record.wav", true));
+		queue.push(p);
+
+		p = new Packet();
+		p.addBlock(new Ping(10));
+		queue.push(p);
+
+		p = new Packet();
+		p.addBlock(new Choreo("demo"));
+		queue.push(p);
+
+		p = new Packet();
+		p.addBlock(new Ping(10));
+		queue.push(p);
+
+		p = new Packet();
+		p.addBlock(new Record("test.mp3", true));
+		queue.push(p);
+	}
+
 	public Packet getNextCommand() {
-		Packet next = messages.poll();
+		Packet next = queue.next();
 
 		if (next != null) {
 			return next;
@@ -85,10 +85,6 @@ public class BunnyService {
 		Packet p = new Packet();
 		p.addBlock(new Ping());
 		return p;
-	}
-
-	public void addCommand(Packet command) {
-		messages.offer(command);
 	}
 
 	public void handleRFIDTag(String rfid) throws Exception {

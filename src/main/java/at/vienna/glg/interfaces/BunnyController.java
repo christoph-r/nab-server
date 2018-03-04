@@ -39,6 +39,10 @@ public class BunnyController {
 	@GetMapping(value = "/bc.jsp", produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public InputStreamResource sendBootImage(@RequestParam Map<String, String> q) throws Exception {
 		logger.info("Rabbit MAC {} with version {} started", q.get("m"), q.get("v"));
+
+		// Add test data after start.
+		bunnyService.initTestData();
+
 		return new InputStreamResource(bunnyService.getBootImage());
 	}
 
