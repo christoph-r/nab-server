@@ -15,7 +15,7 @@ public class ControllersAdvice {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public String handleServerErrors(Throwable e) {
 
-		logger.error("Unhandled exception caught: {}", e);
+		logger.error("Unhandled exception caught", e);
 		return "Internal server error";
 	}
 }
