@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,10 @@ public class BunnyService {
 
 	public void initTestData() {
 		Packet p = new Packet();
+		p.addBlock(new Choreo("demo"));
+		queue.push(p);
+
+		p = new Packet();
 		p.addBlock(new Ping(10));
 		queue.push(p);
 
@@ -73,6 +78,14 @@ public class BunnyService {
 
 		p = new Packet();
 		p.addBlock(new Record("test.mp3", true));
+		queue.push(p);
+
+		p = new Packet();
+		p.addBlock(new Ping(10));
+		queue.push(p);
+
+		p = new Packet();
+		p.addBlock(new Choreo("demo"));
 		queue.push(p);
 	}
 
@@ -105,11 +118,15 @@ public class BunnyService {
 	public int[] loadChoreography(String choreoId) throws Exception {
 		Choreography cb = new Choreography(choreoId);
 
-		cb.addEarMove(10, Choreography.EAR_RIGHT, 0, Choreography.DIRECTION_FORWARD);
-		cb.addEarMove(10, Choreography.EAR_LEFT, 12, Choreography.DIRECTION_BACKWARD);
-		cb.addLedCommand(20, Choreography.LED_CENTER, 255, 0, 0);
-		cb.addLedCommand(20, Choreography.LED_RIGHT, 0, 255, 0);
-		cb.addLedCommand(20, Choreography.LED_LEFT, 0, 0, 255);
+		Random rand = new Random();
+
+		cb.addEarMove(50, Choreography.EAR_RIGHT, rand.nextInt(13), rand.nextInt(2));
+		cb.addEarMove(10, Choreography.EAR_LEFT, rand.nextInt(13), rand.nextInt(2));
+		cb.addLedCommand(10, Choreography.LED_CENTER, rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+		cb.addLedCommand(2, Choreography.LED_RIGHT, rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+		cb.addLedCommand(3, Choreography.LED_LEFT, rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+		cb.addLedCommand(20, Choreography.LED_BOTTOM, rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+		cb.addLedCommand(30, Choreography.LED_TOP, rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
 
 		return cb.getContent();
 	}
