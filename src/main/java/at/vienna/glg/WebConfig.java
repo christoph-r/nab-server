@@ -8,6 +8,7 @@ import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -20,6 +21,7 @@ class WebConfig extends WebMvcConfigurationSupport {
 		converters.add(new FormHttpMessageConverter());
 		converters.add(new ByteArrayHttpMessageConverter());
 		converters.add(new ResourceHttpMessageConverter());
+		converters.add(new MappingJackson2HttpMessageConverter());
 	}
 
 	@Override

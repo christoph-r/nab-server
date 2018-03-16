@@ -39,10 +39,6 @@ public class BunnyController {
 	@GetMapping(value = "/bc.jsp", produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public InputStreamResource sendBootImage(@RequestParam Map<String, String> q) throws Exception {
 		logger.info("Rabbit MAC {} with version {} started", q.get("m"), q.get("v"));
-
-		// Add test data after start.
-		bunnyService.initTestData();
-
 		return new InputStreamResource(bunnyService.getBootImage());
 	}
 
@@ -72,6 +68,7 @@ public class BunnyController {
 	@GetMapping(value = "/p4.jsp", produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public byte[] recieveUpdatesAndSendCommands(@RequestParam Map<String, String> q) throws Exception {
 		logger.info("Rabbit {} sent status {}", q.get("sn"), q.get("sd"));
+
 		return toResponse(bunnyService.getNextCommand().generatePacket());
 	}
 
@@ -111,7 +108,7 @@ public class BunnyController {
 	@GetMapping(value = "/choreos/{cId}", produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public byte[] sendChoreography(@PathVariable String cId, @RequestParam Map<String, String> q) throws Exception {
 		logger.info("Rabbit requested choreography {}", cId);
-		return toResponse(bunnyService.loadChoreography(cId));
+		return toResponse(bunnyService.getChoreography(cId));
 	}
 
 	/**

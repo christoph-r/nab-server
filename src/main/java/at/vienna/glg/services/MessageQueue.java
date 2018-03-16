@@ -15,6 +15,10 @@ public class MessageQueue {
 
 	private final Queue<Packet> messages = new ConcurrentLinkedQueue<>();
 
+	public boolean hasNext() {
+		return !messages.isEmpty();
+	}
+
 	public Packet next() {
 		return messages.poll();
 	}
