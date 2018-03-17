@@ -53,7 +53,6 @@ public class BunnyService {
 
 		if (queue.hasNext()) {
 			p = queue.next();
-			p.addBlock(new Ping(10));
 		} else {
 			p.addBlock(new Ping());
 		}

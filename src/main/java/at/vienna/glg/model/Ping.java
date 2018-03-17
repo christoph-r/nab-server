@@ -5,7 +5,7 @@ import fi.uta.cs.nabaztag.PingIntervalBlock;
 public class Ping extends PingIntervalBlock {
 
 	/**
-	 * Create default ping intervall with 60 seconds.
+	 * Create default ping interval.
 	 */
 	public Ping() {
 		super(60);
